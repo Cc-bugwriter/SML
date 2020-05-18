@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 def markov_chain(initial=np.array([1e-5, 1-1e-5]), epoch=20):
     """
     markov_chain to compute bacterium with specific mutation
-    :param initial: [array], initial bacterium (default value
+    :param initial: [array], initial bacterium (default value:np.array([1e-5, 1-1e-5]) )
     :param epoch:[int], iteration times
     :return:
     mutation [list], the record of evaluation history
@@ -16,6 +16,7 @@ def markov_chain(initial=np.array([1e-5, 1-1e-5]), epoch=20):
     # initial mutation hist list
     mutation = []
 
+    # assign initial value
     mutation.append(initial[0])
 
     for i in range(epoch):
@@ -49,3 +50,10 @@ def plot_mutation(mutation):
 if __name__ == '__main__':
     m = markov_chain(epoch=20)
     plot_mutation(m)
+
+    m2 = markov_chain(epoch=40)
+    plot_mutation(m2)
+
+    for i in range(1, len(m)):
+        if m[i] / m[i - 1] > 1.01:
+            print(i)
