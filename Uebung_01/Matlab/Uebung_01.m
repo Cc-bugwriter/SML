@@ -47,5 +47,33 @@ P_B = 0.3*0.03+0.1*0.97
 P_AB = P_BA*P_A/P_B
 
 
-%% 
-2.3/(100-55+2.3)
+%% Aufgabe 3a)
+p_si = [0.02, 0.67, 0.23, 0.08];
+h_p = -log2(p_si)
+H_p = sum(h_p.*p_si)
+
+% max information
+p_si_ave = [0.25, 0.25, 0.25, 0.25];
+h_p_ave = -log2(p_si_ave)
+H_p = sum(h_p_ave.*p_si_ave)
+
+%% Aufgabe 3b)
+% 数值解
+% Set Initial theta
+initial_lambda = zeros(2,1);
+
+% Set options for fminunc
+options = optimset('GradObj', 'on', 'MaxIter', 50);
+
+% Run fmincg to obtain the optimal theta
+% This function will return theta and the cost
+[lambda_such, ~] = fmincg (@(lambda_)(dual_lagrange(lambda_)), ...
+    initial_lambda, options);
+
+%% 解析解
+syms lambda_1 lambda_2
+eqns = [2*exp(1+2*lambda_1+lambda_2)+4*exp(1+4*lambda_1+lambda_2)+6*exp(1+6*lambda_1+lambda_2)+8*exp(1+8*lambda_1+lambda_2)==6;
+    exp(1+2*lambda_1+lambda_2)+exp(1+4*lambda_1+lambda_2)+exp(1+6*lambda_1+lambda_2)+exp(1+8*lambda_1+lambda_2) == 1];
+
+[solve_1, solve_2] = solve(eqns, lambda_1, lambda_2)
+

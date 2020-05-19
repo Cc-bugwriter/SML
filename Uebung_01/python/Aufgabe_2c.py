@@ -11,7 +11,7 @@ def markov_chain(initial=np.array([1e-5, 1-1e-5]), epoch=20):
     mutation [list], the record of evaluation history
     """
     # assign probability matrix
-    T = np.array([[.55, .023], [.45, .977]])
+    T = np.array([[.45, .023], [.55, .977]])
 
     # initial mutation hist list
     mutation = []
