@@ -48,12 +48,13 @@ def plot_mutation(mutation):
 
 
 if __name__ == '__main__':
-    m = markov_chain(epoch=20)
+    m = markov_chain(initial=np.array([1, 0]), epoch=20)
     plot_mutation(m)
 
-    m2 = markov_chain(epoch=40)
+    m2 = markov_chain(initial=np.array([1, 0]), epoch=40)
     plot_mutation(m2)
 
     for i in range(1, len(m)):
-        if m[i] / m[i - 1] > 1.01:
-            print(i)
+        if m[i] / m[i - 1] < 1.01:
+            index = i
+    print(f"after {index} iteration change not significant")
