@@ -93,7 +93,7 @@ def ridge_regression(data_train, data_test, coe_=0.01, n=1, plot=True):
         :return rmse: [float], root mean squared error
         """
         phi = 1/2 * np.linalg.norm(X @ w - y) ** 2 + coe_/2 * np.linalg.norm(w) ** 2
-        rmse = np.linalg.norm(X @ w - y)
+        rmse = np.sqrt(np.linalg.norm(X @ w - y) ** 2 / len(y))
         return phi, rmse
 
     _, rmse_train = loss(X_train, y_train, w)
@@ -249,12 +249,12 @@ def Bayesian_linear_ridge_regression(data_train, data_test, alpha=0.01, sigma=0.
         :return:
         """
         # compute RMSE
-        rmse = np.linalg.norm(pre - y)
+        rmse = np.sqrt(np.linalg.norm(pre - y) ** 2 / len(y))
 
         # compute average log-likelihood
         log_likeli = .0
         for i in range(len(y)):
-            log_likeli += y.shape[1]/2 * np.log(1/(2*np.pi * sigma)) - 1/(2*sigma) * np.linalg.norm(y[i, :]- pre[i, :])
+            log_likeli += y.shape[1]/2 * np.log(1/(2*np.pi * sigma)) - 1/(2*sigma) * np.linalg.norm(y[i, :] - pre[i, :])
         log_likeli = log_likeli/len(y)
 
         return rmse, log_likeli
@@ -373,33 +373,33 @@ if __name__ == "__main__":
     data_train = load_data("lin_reg_train")
     data_test = load_data("lin_reg_test")
 
-    # task a
-    rmse_train, rmse_test = ridge_regression(data_train, data_test)
-    print(f"root mean squared error of the training data: {rmse_train}")
-    print(f"root mean squared error of the training data: {rmse_test}")
-
-    # task b
-    for i in range(2, 5):
-        rmse_train, rmse_test = ridge_regression(data_train, data_test, n=i)
-        print(f"polynomials of degrees={i-1}, root mean squared error of the training data: {rmse_train}")
-        print(f"polynomials of degrees={i-1}, root mean squared error of the training data: {rmse_test}")
+    # # task a
+    # rmse_train, rmse_test = ridge_regression(data_train, data_test)
+    # print(f"root mean squared error of the training data: {rmse_train}")
+    # print(f"root mean squared error of the test data: {rmse_test}")
+    #
+    # # task b
+    # for i in range(2, 5):
+    #     rmse_train, rmse_test = ridge_regression(data_train, data_test, n=i)
+    #     print(f"polynomials of degrees={i}, root mean squared error of the training data: {rmse_train}")
+    #     print(f"polynomials of degrees={i}, root mean squared error of the test data: {rmse_test}")
 
     # task c
-    result = []
-    for i in range(2, 5):
-        rmse_train_list, rmse_val_list, rmse_test_list = fold_cross_validation(data_train, data_test, n=i)
-        print(f"polynomials of degrees={i}, root mean of training rmse: {np.mean(rmse_train_list)}")
-        print(f"polynomials of degrees={i}, root mean of validation rmse: {np.mean(rmse_val_list)}")
-        print(f"polynomials of degrees={i}, root mean of test rmse: {np.mean(rmse_test_list)}")
+    # result = []
+    # for i in range(2, 5):
+    #     rmse_train_list, rmse_val_list, rmse_test_list = fold_cross_validation(data_train, data_test, n=i)
+    #     print(f"polynomials of degrees={i}, root mean squared error of training: {np.mean(rmse_train_list)}")
+    #     print(f"polynomials of degrees={i}, root mean squared error of validation: {np.mean(rmse_val_list)}")
+    #     print(f"polynomials of degrees={i}, root mean squared error of test: {np.mean(rmse_test_list)}")
+    #
+    #     result.append([np.mean(rmse_train_list), np.mean(rmse_val_list), np.mean(rmse_test_list),
+    #               np.std(rmse_train_list), np.std(rmse_val_list), np.std(rmse_test_list)])
 
-        result.append([np.mean(rmse_train_list), np.mean(rmse_val_list), np.mean(rmse_test_list),
-                  np.std(rmse_train_list), np.std(rmse_val_list), np.std(rmse_test_list)])
+    # # task d
+    # Bayesian_linear_ridge_regression(data_train, data_test)
 
-    # task d
-    Bayesian_linear_ridge_regression(data_train, data_test)
-
-    # task e
-    Bayesian_linear_ridge_regression(data_train, data_test, SE=True)
+    # # task e
+    # Bayesian_linear_ridge_regression(data_train, data_test, SE=True)
 
     # task f
     beta_list = random_search(data_train, data_test)
